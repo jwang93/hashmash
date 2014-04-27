@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="static/ico/favicon.png">
+
+    <title>HashMash</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="static/css/main.css" rel="stylesheet">
+    
+	<link rel="stylesheet" href="static/css/font-awesome.min.css">
+    
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
+    
+    <script src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/js/smoothscroll.js"></script> 
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="static/js/html5shiv.js"></script>
+      <script src="static/js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body >
+
+	<div id="section-topbar">
+		<div id="topbar-inner">
+			<div class="container">
+				<div class="row">
+					<div class="dropdown">
+						<ul id="nav" class="nav">
+							<li class="menu-item"><a class="smoothScroll" href="#about" title="About"><i class="icon-user"></i></a></li>
+							<li class="menu-item"><a class="smoothScroll" href="#resume" title="Resume"><i class="icon-file"></i></a></li>
+							<li class="menu-item"><a class="smoothScroll" href="#work" title="Works"><i class="icon-briefcase"></i></a></li>
+							<li class="menu-item"><a class="smoothScroll" href="#contact" title="Contact"><i class="icon-envelope"></i></a></li>
+						</ul><!--/ uL#nav -->
+					</div><!-- /.dropdown -->
+
+					<div class="clear"></div>
+				</div><!--/.row -->
+			</div><!--/.container -->
+
+			<div class="clear"></div>
+		</div><!--/ #topbar-inner -->
+	</div><!--/ #section-topbar -->
+	
+	<div id="headerwrap">
+		<div class="container">
+			<div class="row centered">
+				<div class="col-lg-12">
+					<h1>HashMash</h1>
+					<h3>Contact Me @ jay.wang@duke.edu </h3>
+					<br/>
+					<br/>
+					<h2>How It Works:</h2>
+					<h3>Enter in the Instagram usernames of the accounts you want to compare.</h3>
+					<h3>HashMash grabs the most popular hashtags per account.</h3>
+					<h3>Note - HashMash only works on public Instagram accounts.</h3>	
+				</div><!--/.col-lg-12 -->
+			</div><!--/.row -->
+			<form action="/data" method="post" name="index">
+				<h1></h1>
+				<br/>
+				<br/>
+		    	<div class="centered">
+		    		<h3>
+		    			<p>ENTER USERS:</p>
+  						<input type="text" name="users" size="50"></input>
+    			    </h3>	
+		        </div>
+			    <p><input type="submit" value="Submit"></p>
+			</form>	
+		</div><!--/.container -->
+
+	</div><!--/.#headerwrap -->
+	
+	
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="static/js/bootstrap.js"></script>
+  </body>
+</html>
