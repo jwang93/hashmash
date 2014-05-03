@@ -1,9 +1,12 @@
-from flask import render_template, flash, redirect
+from flask import Flask, render_template, flash, redirect
 from flask import request, redirect
-from app import app
 from forms import LoginForm
 import helpers
 
+
+app = Flask(__name__, static_url_path='')
+
+app.secret_key= "asdfaewra"
 
 @app.route('/')
 @app.route('/index', methods = ['GET', 'POST'])
@@ -33,3 +36,6 @@ def scrape(ig_handles):
 
     for person in people:
         helpers.main(person, filename)
+
+if __name__ == '__main__':
+        app.run(debug=True)
