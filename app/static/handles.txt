@@ -4,3 +4,6 @@ kingjames, easymoneysniper, russwest44, carmeloanthony, dwighthoward, jharden13,
 Football Teams:
 denverbroncos, patriots, 49ers, raiders, houstontexans, dallascowboys, nygiants, ravens, officialbrowns, panthers, kcchiefs, seahawks, chicagobears, packers
 
+Universities:
+dukeuniversity, dartmouthcollege, uofpenn, harvardu, yale, stanford, princeton_university, brownu, cornelluniversity, johnshopkinsu, northwesternu, uchicagocollege, mitpics
+
