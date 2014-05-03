@@ -4,7 +4,7 @@ from forms import LoginForm
 import helpers
 
 
-app = Flask(__name__, static_url_path='')
+app = Flask(__name__)
 app.secret_key= "asdfaewra"
 
 @app.route('/')
