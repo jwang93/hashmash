@@ -12,6 +12,7 @@ default = ""
 
 
 def main(name, filename): 
+    print "Big Move"
     hashtag_list = []
     hashtag_dict = {}
     sorted_hashtag_list = []    

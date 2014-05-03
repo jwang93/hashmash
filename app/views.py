@@ -5,7 +5,6 @@ import helpers
 
 
 app = Flask(__name__, static_url_path='')
-
 app.secret_key= "asdfaewra"
 
 @app.route('/')
@@ -22,6 +21,7 @@ def handle_data():
     form = LoginForm()
     names = request.form['users']
     print names
+    scrape(names)
     return render_template('index.html', 
         title = 'Enter Info',
         form = form)

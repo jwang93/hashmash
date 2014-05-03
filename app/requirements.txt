@@ -5,6 +5,7 @@ MarkupSafe==0.21
 WTForms==1.0.5
 Werkzeug==0.9.4
 beautifulsoup4==4.3.2
+gunicorn==18.0
 itsdangerous==0.24
 requests==2.2.1
 simplejson==3.4.1
