@@ -25,7 +25,6 @@ def index():
 def handle_data():
     form = LoginForm()
     names = request.form['users']
-    print names
     scrape(names)
     return render_template('index.html', 
         title = 'Enter Info',
