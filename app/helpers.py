@@ -9,11 +9,12 @@ from bs4 import BeautifulSoup
 
 
 default = ""
-
+ENGAGEMENT_SCALE = 130
 
 def main(name, filename): 
     hashtag_list = []
     hashtag_dict = {}
+    weightedAveDict = {}
     sorted_hashtag_list = []    
     name = name.strip()
     url = 'http://instagram.com/' + name
@@ -44,21 +45,23 @@ def main(name, filename):
 
 
     for index, photo in enumerate(photos):
+        comments = processComments(photo)
         likes = processLikes(photo)
         caption = processCaption(photo)
         location = processLocation(photo)
         hashtags = processHashtags(photo, hashtag_list)
-        addToDict(likes, hashtags, hashtag_dict)
+        addToDict(comments, likes, hashtags, hashtag_dict)
 
-    sorted_hashtag_list = sorted(hashtag_dict.items(), key=itemgetter(1))
+    weightedAveDict = computeWeightedAve(weightedAveDict, hashtag_dict)
+    sorted_hashtag_list = sorted(weightedAveDict.items(), key=itemgetter(1))
     sorted_hashtag_list.reverse()
     print sorted_hashtag_list
-    writeToCSV(name, sorted_hashtag_list, filename)
+    writeToCSV(name, sorted_hashtag_list, filename, hashtag_dict)
     hashtag_list = []
     hashtag_dict = {}
     sorted_hashtag_list = []
 
-def writeToCSV(user, sorted_hashtag_list, filename):
+def writeToCSV(user, sorted_hashtag_list, filename, hashtag_dict):
     csv_name = 'csvs/' + filename + '.csv'
     with open(csv_name, 'ab') as csvfile:
         writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
@@ -68,7 +71,11 @@ def writeToCSV(user, sorted_hashtag_list, filename):
         writer.writerow([user])
         for index, hashtag_tuple in enumerate(sorted_hashtag_list):
             print hashtag_tuple
-            writer.writerow([str(index+1)] + [str(hashtag_tuple[0])] + [str(hashtag_tuple[1])])
+            hashtag = str(hashtag_tuple[0])
+            weightedAve = str(hashtag_tuple[1])
+            likes = str(hashtag_dict[hashtag][0])
+            comments = str(hashtag_dict[hashtag][1])
+            writer.writerow([str(index+1)] + [hashtag] + [weightedAve] + [likes] + [comments])
         writer.writerow([])
 
 
@@ -83,6 +90,14 @@ def checkUnicode(str):
 	    str = unicode(str)
 	return unicodedata.normalize('NFKD', str).encode('ascii', 'ignore')
 
+
+def computeWeightedAve(weightedAveDict, hashtag_dict):
+    for entry in hashtag_dict:
+        weightedAveDict[entry] = hashtag_dict[entry][0] + (hashtag_dict[entry][1] * ENGAGEMENT_SCALE)
+    return weightedAveDict
+
+def processComments(photo):
+    return checkUnicode([photo["comments"]["count"]])
 
 def processLikes(photo):
     return checkUnicode([photo["likes"]["count"]])
@@ -120,13 +135,15 @@ def processHashtags(photo, hashtag_list):
             hashtag_list.append(word)
     return hashtags
 
-def addToDict(likes, hashtags, hashtag_dict):
+def addToDict(comments, likes, hashtags, hashtag_dict):
     likes = int(likes[1:len(likes)-1])
+    comments = int(comments[1:len(comments)-1])
     for ht in hashtags:
         if hashtag_dict.has_key(ht):
-            hashtag_dict[ht] += likes
+            hashtag_dict[ht] = tuple(map(lambda x, y: x + y, hashtag_dict[ht], (likes, comments)))
         else:
-            hashtag_dict[ht] = likes
+            hashtag_dict[ht] = (likes, comments)
+    print hashtag_dict
 
 def cleanWord(word):
     separators = ['\\', ',', '.', '"']
