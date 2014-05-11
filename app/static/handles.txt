@@ -7,3 +7,11 @@ denverbroncos, patriots, 49ers, raiders, houstontexans, dallascowboys, nygiants,
 Universities:
 dukeuniversity, dartmouthcollege, uofpenn, harvardu, yale, stanford, princeton_university, brownu, cornelluniversity, johnshopkinsu, northwesternu, uchicagocollege, mitpics
 
+Athletic Brands: 
+nike, adidas, reebok, filausa, asics, converse, newbalance, mizunorunning, underarmour, puma
+
+Hollywood:
+justinbieber, rihanna, champagnepapi, beyonce, taylorswift, kimkardashian, sophiabush, lisaaramos, jessicaalba
+
+Technology:
+apple, samsungmobile, asususa, googleglass, zynga, fivestars, dropbox, xbox, sony, bose, jawbone

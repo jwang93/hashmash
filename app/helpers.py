@@ -10,7 +10,10 @@ from bs4 import BeautifulSoup
 
 default = ""
 ENGAGEMENT_SCALE = 130
+USER_DNE_ERROR = "<Response [404]>"
 
+
+# return -1 if there is an error accessing the Instagram account 
 def main(name, filename): 
     hashtag_list = []
     hashtag_dict = {}
@@ -19,6 +22,11 @@ def main(name, filename):
     name = name.strip()
     url = 'http://instagram.com/' + name
     response = requests.get(url)
+
+    print str(response)
+    if (str(response) == USER_DNE_ERROR):
+        return -1
+
     html_content = response.text 
     soup = BeautifulSoup(html_content)
     JSON = "";
@@ -56,12 +64,15 @@ def main(name, filename):
     sorted_hashtag_list = sorted(weightedAveDict.items(), key=itemgetter(1))
     sorted_hashtag_list.reverse()
     print sorted_hashtag_list
-    writeToCSV(name, sorted_hashtag_list, filename, hashtag_dict)
+    writeToCSV(name, sorted_hashtag_list, filename, hashtag_dict, getMaxEngagement(sorted_hashtag_list))
     hashtag_list = []
     hashtag_dict = {}
     sorted_hashtag_list = []
 
-def writeToCSV(user, sorted_hashtag_list, filename, hashtag_dict):
+def getMaxEngagement(sorted_hashtag_list):
+    return sorted_hashtag_list[0][1]
+
+def writeToCSV(user, sorted_hashtag_list, filename, hashtag_dict, max_engagement):
     csv_name = 'csvs/' + filename + '.csv'
     with open(csv_name, 'ab') as csvfile:
         writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
@@ -69,10 +80,11 @@ def writeToCSV(user, sorted_hashtag_list, filename, hashtag_dict):
         print type(sorted_hashtag_list)
         print len(sorted_hashtag_list)
         writer.writerow([user])
+        writer.writerow([""] + [""] + ["engagement_score"] + ["num_likes"] + ["num_comments"])
         for index, hashtag_tuple in enumerate(sorted_hashtag_list):
             print hashtag_tuple
             hashtag = str(hashtag_tuple[0])
-            weightedAve = str(hashtag_tuple[1])
+            weightedAve = str(hashtag_tuple[1] / float(max_engagement))
             likes = str(hashtag_dict[hashtag][0])
             comments = str(hashtag_dict[hashtag][1])
             writer.writerow([str(index+1)] + [hashtag] + [weightedAve] + [likes] + [comments])

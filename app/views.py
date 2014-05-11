@@ -8,6 +8,8 @@ import os
 
 app = Flask(__name__)
 app.secret_key= "asdfaewra"
+invalid_accounts = []
+
 
 @app.route('/')
 @app.route('/index', methods = ['GET', 'POST'])
@@ -20,21 +22,14 @@ def index():
         title = 'Enter Info',
         form = form)
 
-
-@app.route('/data', methods=['POST'])
-def handle_data():
-    form = LoginForm()
-    names = request.form['users']
-    scrape(names)
-    return render_template('index.html', 
-        title = 'Enter Info',
-        form = form)
-
 @app.route('/results', methods=['GET', 'POST'])
 def display_results():
     names = request.form['users']
     scrape(names)
-    return render_template('results.html')
+    if scrape(names) ==  1:
+        return render_template('results.html')
+    else:
+        return render_template('error.html')
 
 
 @app.route('/download')
@@ -53,15 +48,24 @@ def download():
     return response
 
 
+# Return 1 if all accounts are valid, 0 otherwise 
 def scrape(ig_handles):
     username = ig_handles
     filename = "results"
     people = username.split(",")
-
+    invalid_accounts = []
+    
     open('csvs/' + filename + '.csv', 'w').close()
 
     for person in people:
-        helpers.main(person, filename)
+        if helpers.main(person, filename) == -1:
+            invalid_accounts.append(str(person))
+            print str(person) + " is an invalid or private Instagram account." 
+
+    if len(invalid_accounts) > 0:
+        return 0
+    else:
+        return 1
 
 if __name__ == '__main__':
         app.run(debug=True)
