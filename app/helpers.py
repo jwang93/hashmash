@@ -50,8 +50,6 @@ def main(name, filename):
 
     photos = temp['entry_data']['UserProfile'][0]["userMedia"]
 
-
-
     for index, photo in enumerate(photos):
         comments = processComments(photo)
         likes = processLikes(photo)
@@ -64,13 +62,17 @@ def main(name, filename):
     sorted_hashtag_list = sorted(weightedAveDict.items(), key=itemgetter(1))
     sorted_hashtag_list.reverse()
     print sorted_hashtag_list
+    print getMaxEngagement(sorted_hashtag_list)
     writeToCSV(name, sorted_hashtag_list, filename, hashtag_dict, getMaxEngagement(sorted_hashtag_list))
     hashtag_list = []
     hashtag_dict = {}
     sorted_hashtag_list = []
 
 def getMaxEngagement(sorted_hashtag_list):
-    return sorted_hashtag_list[0][1]
+    if sorted_hashtag_list:
+        return sorted_hashtag_list[0][1]
+    else:
+        return 1
 
 def writeToCSV(user, sorted_hashtag_list, filename, hashtag_dict, max_engagement):
     csv_name = 'csvs/' + filename + '.csv'
