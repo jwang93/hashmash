@@ -54,11 +54,11 @@ def scrape(ig_handles):
     filename = "results"
     people = username.split(",")
     invalid_accounts = []
-    
+
     open('csvs/' + filename + '.csv', 'w').close()
 
     for person in people:
-        if helpers.main(person, filename) == -1:
+        if helpers.main(person.strip(), filename) == -1:
             invalid_accounts.append(str(person))
             print str(person) + " is an invalid or private Instagram account." 
 

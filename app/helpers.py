@@ -8,47 +8,29 @@ from operator import itemgetter
 from bs4 import BeautifulSoup
 
 
-default = ""
 ENGAGEMENT_SCALE = 130
+EMPTY_STRING = ""
 USER_DNE_ERROR = "<Response [404]>"
-
+DEFAULT_URL = 'http://instagram.com/'
 
 # return -1 if there is an error accessing the Instagram account 
 def main(name, filename): 
     hashtag_list = []
     hashtag_dict = {}
     weightedAveDict = {}
-    sorted_hashtag_list = []    
-    name = name.strip()
-    url = 'http://instagram.com/' + name
-    response = requests.get(url)
+    sorted_hashtag_list = []  
 
-    print str(response)
+    # build URL and get response   
+    url =  DEFAULT_URL + name
+    response = requests.get(url)
+    # error checking is user invalid 
     if (str(response) == USER_DNE_ERROR):
         return -1
 
-    html_content = response.text 
-    soup = BeautifulSoup(html_content)
-    JSON = "";
-
-    for n in soup.find_all('script'):
-        n = str(unicode(n))
-        if ('window._sharedData' in n):
-            JSON = n
-
-    length = len(JSON)
-    JSON = JSON[52:length-10]
-
-
-    temp = json.loads(JSON)
-
-
-    """
-    json_file = open("sophia.json", "w")
-    json_file.write(JSON)
-    """
-
-    photos = temp['entry_data']['UserProfile'][0]["userMedia"]
+    # scrape HTML for the photos data
+    photos = scrapeHTML(response.text)
+    if (len(photos) == 0): # response was empty, so user is private
+        return -1
 
     for index, photo in enumerate(photos):
         comments = processComments(photo)
@@ -61,13 +43,28 @@ def main(name, filename):
     weightedAveDict = computeWeightedAve(weightedAveDict, hashtag_dict)
     sorted_hashtag_list = sorted(weightedAveDict.items(), key=itemgetter(1))
     sorted_hashtag_list.reverse()
-    print sorted_hashtag_list
-    print getMaxEngagement(sorted_hashtag_list)
     writeToCSV(name, sorted_hashtag_list, filename, hashtag_dict, getMaxEngagement(sorted_hashtag_list))
     hashtag_list = []
     hashtag_dict = {}
     sorted_hashtag_list = []
 
+# use BeautifulSoup to scrape the raw HTML, return photo information as list
+def scrapeHTML(response):
+    html_content = response 
+    soup = BeautifulSoup(html_content)
+    JSON = EMPTY_STRING;
+
+    for n in soup.find_all('script'):
+        n = str(unicode(n))
+        if ('window._sharedData' in n):
+            JSON = n
+
+    length = len(JSON)
+    JSON = JSON[52:length-10]
+    temp = json.loads(JSON)
+    return temp['entry_data']['UserProfile'][0]["userMedia"]    
+
+# return the largest engagement score of all hashtags
 def getMaxEngagement(sorted_hashtag_list):
     if sorted_hashtag_list:
         return sorted_hashtag_list[0][1]
@@ -79,12 +76,9 @@ def writeToCSV(user, sorted_hashtag_list, filename, hashtag_dict, max_engagement
     with open(csv_name, 'ab') as csvfile:
         writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         #writer.writerow(['#'] + ['likes'] + ['caption'] + ['location'] + ['hashtags'])
-        print type(sorted_hashtag_list)
-        print len(sorted_hashtag_list)
         writer.writerow([user])
         writer.writerow([""] + [""] + ["engagement_score"] + ["num_likes"] + ["num_comments"])
         for index, hashtag_tuple in enumerate(sorted_hashtag_list):
-            print hashtag_tuple
             hashtag = str(hashtag_tuple[0])
             weightedAve = str(hashtag_tuple[1] / float(max_engagement))
             likes = str(hashtag_dict[hashtag][0])
@@ -120,14 +114,14 @@ def processCaption(photo):
     if (photo["caption"] is None):
         caption = ""
     else: 
-        caption = checkUnicode([photo["caption"].get("text", default)])
+        caption = checkUnicode([photo["caption"].get("text", EMPTY_STRING)])
     return caption	
 
 def processLocation(photo):
     if (photo["location"] is None):
         location = ""
     else:
-        location = checkUnicode([photo["location"].get("name", default)])
+        location = checkUnicode([photo["location"].get("name", EMPTY_STRING)])
     return location	
 
 def processHashtags(photo, hashtag_list):
@@ -157,7 +151,6 @@ def addToDict(comments, likes, hashtags, hashtag_dict):
             hashtag_dict[ht] = tuple(map(lambda x, y: x + y, hashtag_dict[ht], (likes, comments)))
         else:
             hashtag_dict[ht] = (likes, comments)
-    print hashtag_dict
 
 def cleanWord(word):
     separators = ['\\', ',', '.', '"']
