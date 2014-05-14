@@ -27,7 +27,18 @@ def display_results():
     names = request.form['users']
     scrape(names)
     if scrape(names) ==  1:
-        return render_template('results.html')
+        data = ""
+        with open('csvs/results.csv', 'rb') as csvfile:
+            reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+            for row in reader:
+                data = data + ', '.join(row) + '\n'
+        # We need to modify the response, so the first thing we 
+        # need to do is create a response out of the CSV string
+        response = make_response(data)
+        # This is the key: Set the right header for the response
+        # to be downloaded, instead of just printed on the browser
+        response.headers["Content-Disposition"] = "attachment; filename=results.csv"
+        return response
     else:
         return render_template('error.html')
 
