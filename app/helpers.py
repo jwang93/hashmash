@@ -78,13 +78,16 @@ def writeToCSV(user, sorted_hashtag_list, filename, hashtag_dict, max_engagement
         #writer.writerow(['#'] + ['likes'] + ['caption'] + ['location'] + ['hashtags'])
         writer.writerow([user])
         writer.writerow([""] + [""] + ["engagement_score"] + ["num_likes"] + ["num_comments"])
-        for index, hashtag_tuple in enumerate(sorted_hashtag_list):
-            hashtag = str(hashtag_tuple[0])
-            weightedAve = str(hashtag_tuple[1] / float(max_engagement))
-            likes = str(hashtag_dict[hashtag][0])
-            comments = str(hashtag_dict[hashtag][1])
-            writer.writerow([str(index+1)] + [hashtag] + [weightedAve] + [likes] + [comments])
+        hashtag = ""
+
+        for i in range(0, 5):
+            hashtag += sorted_hashtag_list[i][0] + ","
+
         writer.writerow([])
+        hashtag = hashtag[:-1]
+        text_file = open("output.txt", "w")
+        text_file.write(hashtag)
+        text_file.close()
 
 
 def checkUnicode(str):
