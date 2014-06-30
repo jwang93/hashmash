@@ -72,22 +72,18 @@ def getMaxEngagement(sorted_hashtag_list):
         return 1
 
 def writeToCSV(user, sorted_hashtag_list, filename, hashtag_dict, max_engagement):
+
+    hashtag = ""
+    
+    for i in range(0, 5):
+        hashtag += sorted_hashtag_list[i][0] + ","
+    
+    hashtag = hashtag[:-1]
+    text_file = open("output.txt", "w")
+    text_file.write(hashtag)
+    text_file.close()
     csv_name = 'csvs/' + filename + '.csv'
-    with open(csv_name, 'ab') as csvfile:
-        writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        #writer.writerow(['#'] + ['likes'] + ['caption'] + ['location'] + ['hashtags'])
-        writer.writerow([user])
-        writer.writerow([""] + [""] + ["engagement_score"] + ["num_likes"] + ["num_comments"])
-        hashtag = ""
 
-        for i in range(0, 5):
-            hashtag += sorted_hashtag_list[i][0] + ","
-
-        writer.writerow([])
-        hashtag = hashtag[:-1]
-        text_file = open("output.txt", "w")
-        text_file.write(hashtag)
-        text_file.close()
 
 
 def checkUnicode(str):

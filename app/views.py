@@ -14,9 +14,6 @@ invalid_accounts = []
 @app.route('/')
 @app.route('/index', methods = ['GET', 'POST'])
 def index():
-    f = open("csvs/results.csv", "w")
-    f.truncate()
-    f.close()
     form = LoginForm()
     return render_template('index.html', 
         title = 'Enter Info',
@@ -53,8 +50,6 @@ def scrape(ig_handles):
     filename = "results"
     people = username.split(",")
     invalid_accounts = []
-
-    open('csvs/' + filename + '.csv', 'w').close()
 
     for person in people:
         if helpers.main(person.strip(), filename) == -1:
