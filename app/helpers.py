@@ -75,7 +75,7 @@ def writeToCSV(user, sorted_hashtag_list, filename, hashtag_dict, max_engagement
 
     hashtag = ""
     
-    for i in range(0, 5):
+    for i in range(0, 10):
         hashtag += sorted_hashtag_list[i][0] + ","
     
     hashtag = hashtag[:-1]

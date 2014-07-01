@@ -23,17 +23,14 @@ def display_results():
     names = request.form['users']
     scrape(names)
     if scrape(names) ==  1:
-        data = ""
-        with open('output.txt', 'rb') as csvfile:
-            reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-            for row in reader:
-                data = data + ', '.join(row) + '\n'
+        f = open("output.txt", "r")
+        text = f.read()
         # We need to modify the response, so the first thing we 
         # need to do is create a response out of the CSV string
-        response = make_response(data)
+        response = make_response(text)
         # This is the key: Set the right header for the response
         # to be downloaded, instead of just printed on the browser
-        response.headers["Content-Disposition"] = "attachment; filename=results.csv"
+        response.headers["Content-Disposition"] = "attachment; filename=hashtags.txt"
         return response
     else:
         return render_template('error.html')
